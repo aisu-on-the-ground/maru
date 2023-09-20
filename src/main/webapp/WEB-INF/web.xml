@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" -->
+<!-- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
+<!-- xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"> -->
+<web-app>
+
+	<!-- 아래는 기본 설정. -->
+<!-- 	<context-param> -->
+<!-- 	<param-name>contextConfigLocation</param-name> -->
+<!-- 	<param-value>/WEB-INF/spring/root-context.xml</param-value> -->
+<!-- 	</context-param> -->
+
+	<!-- *** Presentation Layer 이외의 Config 부분. -->
+	<display-name>Spring JavaConfig</display-name>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+		</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>com.lab.aisu.config.ApplicationConfig
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- Run on Server 후 서버가 로딩될 때 = 즉, Context가 로딩될 때 ContextLoaderListener 클래스가 실행된다. -->
+	<!-- ContextLoaderListener 클래스가 실행될 때 -->
+	<!-- (1) Context는 AnnotationConfigWebApplicationContext 를 사용하고 -->
+	<!-- (2) 그에 대한 설정파일은 com.lab.aisu.config.ApplicationConfig 을 사용하겠다. -->
+
+
+	<!-- *** Presentation Layer Config 부분. -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>contextClass</param-name>
+			<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>com.lab.aisu.config.WebMvcContextConfiguration
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern> <!-- /: 모든 요청을 받겠다. -->
+	</servlet-mapping>
+	<!-- 이 부분은 DispatcherServlet을 프론트 컨트롤러로 사용하겠다는 선언과 같다. -->
+	<!-- DispatcherServlet 클래스가 실행될 때 -->
+	<!-- (1) IoC 컨테이너는 WebApplicationContext의 구현체인 AnnotationConfigWebApplicationContext 를 사용하고 -->
+	<!-- (2) 그에 대한 설정파일은 com.lab.aisu.config.WebMvcContextConfiguration 을 사용하겠다. -->
+
+
+	<!-- *** filter 추가 (filter: 요청이 수행되기 전, 응답이 나가기 전에 한 번씩 걸쳐서 수행할 것들을 설정하는 것) -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value> <!-- 인코딩을 뭘로 할 것인지 개발자가 지정하는 부분. -->
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern> <!-- /*: 모든 요청에 대해 filter를 지정하겠다. -->
+	</filter-mapping>
+	<!-- Spring이 제공하고 있는 CharacterEncodingFilter를 등록하여 한글 인코딩 처리를 하겠다. -->
+	
+	
+</web-app>
