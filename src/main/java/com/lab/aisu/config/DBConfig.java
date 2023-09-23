@@ -28,10 +28,16 @@ class DBConfig implements TransactionManagementConfigurer {
 //  *** 현재 DBConfig.java는 oracle과 hikariCP를 사용했을 때 기준으로 환경설정이 작성됨.
 
 //	private String driverClassName = "oracle.jdbc.driver.OracleDriver";
-	private String driverClassName = "oracle.jdbc.OracleDriver"; // oracle 9 이후
-	private String url = "jdbc:oracle:thin:@localhost:1521:XE";
-	private String username = "board_ex";
-	private String password = "board_ex";
+//	private String driverClassName = "oracle.jdbc.OracleDriver"; // oracle 9 이후
+//	private String url = "jdbc:oracle:thin:@localhost:1521:XE";
+//	private String username = "board_ex";
+//	private String password = "board_ex";
+	
+	private String driverClassName = "com.mysql.jdbc.Driver";
+//	private String driverClassName = "com.mysql.cj.jdbc.Driver"; // mysql-connecter-java 8 이후
+	private String url = "jdbc:mysql://localhost:3306/connectdb?useUnicode=true&characterEncoding=utf8";
+	private String username = "root";
+	private String password = "root";
 
 	@Bean // 코배스 pdf p.83 참고 (hikariCP의 dataSource Java Config)
 	public DataSource dataSource() {
@@ -63,7 +69,6 @@ class DBConfig implements TransactionManagementConfigurer {
 		sqlSessionFactory.setDataSource(dataSource());
 
 		sqlSessionFactory.setConfigLocation(ac.getResource("classpath:/mybatis/mybatis-config.xml"));
-		System.out.println("* * * * sqlSessionFactory 설정중");
 		sqlSessionFactory.setMapperLocations(ac.getResources("classpath:/mapper/*.xml"));
 
 		return (SqlSessionFactory) sqlSessionFactory.getObject();
@@ -83,8 +88,8 @@ class DBConfig implements TransactionManagementConfigurer {
 	
 //	private String driverClassName = "com.mysql.jdbc.Driver";
 //	private String url = "jdbc:mysql://localhost:3306/connectdb?useUnicode=true&characterEncoding=utf8";
-//	private String username = "board_ex";
-//	private String password = "board_ex";
+//	private String username = "root";
+//	private String password = "root";
 //
 //	public DataSource dataSource() {
 //		BasicDataSource dataSource = new BasicDataSource();

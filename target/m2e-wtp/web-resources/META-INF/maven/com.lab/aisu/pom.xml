@@ -146,6 +146,14 @@
 			<version>2.7.8</version>
 		</dependency>
 
+		<!-- MySQL-Connector-Java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+
+
 		<!-- ORM -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
