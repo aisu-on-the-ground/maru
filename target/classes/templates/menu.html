@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+<meta charset="utf-8">
+<title>maru</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="../bootstrap/bootstrap.css"></link>
+<link rel="stylesheet" href="../css/todomanager.css"></link>
+<link rel="stylesheet" href="../css/font.css">
+</head>
+
+<script th:inline="javascript">
+// 	let sessionNo = sessionStorage.getItem('memberNo');
+// 	let memberNo = [[${memberNo}]];
+// 	alert("회원번호는 " + sessionNo +"과 " + memberNo + "입니다.");
+
+// 	let sessionNo = [[${session.memberNo}]];
+// 	alert("회원번호는 " + sessionNo +" 입니다.");
+
+	let member = [[${session.member}]];
+	console.log(member);
+	console.log(member.memberNo);
+	console.log(member.memberId);
+	console.log(member.memberName);
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	/* 컨트롤러 화면 출현 테스트 버튼 */
+	$(document).on("click", "button[class='test-btn']", function() {
+		var option = $(this).data('option');
+
+		switch (option) {
+		case 'create':
+			$('.my-controller.create').css('display', 'inline-block');
+			$('.my-controller.read').css('display', 'none');
+			$('.my-controller.update').css('display', 'none');
+			break;
+		case 'read':
+			$('.my-controller.create').css('display', 'none');
+			$('.my-controller.read').css('display', 'inline-block');
+			$('.my-controller.update').css('display', 'none');
+			break;
+		case 'update':
+			$('.my-controller.create').css('display', 'none');
+			$('.my-controller.read').css('display', 'none');
+			$('.my-controller.update').css('display', 'inline-block');
+			break;
+		}
+	})
+	
+	/* 로그아웃 클릭 */
+	$('#logout').on('click', function() {
+		window.location.href = "/logout";
+	});
+	
+	/* fetch 테스트 */
+	console.log("*** fetch");
+	fetch("/task/rest/taskList")
+		.then((response) => {
+			if(!response.ok) {
+				throw new Error("400 or 500 error");
+			}
+			console.log("파싱 전: " + response);
+			return response.json();
+		})
+		.then((result) => {
+			console.log("파싱 후: " + result);
+			console.log("stringify() 후: " + JSON.stringify(result));
+			console.log("1번째 result: " + result[0]);
+			console.log("1번째 result의 regdate: " + typeof(result[0].taskName) + " / " + result[0].taskName);
+			
+			let i = 0;
+			while(result[i] !== undefined) {
+				// 게시글 한 줄 만들어서 HTML에 뿌리는 함수()
+				createTaskList(result[i]);
+				i++;
+			}
+		});
+});
+	
+function createTaskList(result){
+	
+	let divCard = document.createElement("div");
+	divCard.setAttribute("data-no", result.taskNo);
+	divCard.setAttribute("class", "card border-light today-list-task");
+	
+	let divCardHeader = document.createElement("div");
+	divCardHeader.setAttribute("class", "card-header");
+	
+	let inputCheckBox = document.createElement("input");
+	inputCheckBox.setAttribute("data-no", result.taskNo);
+	inputCheckBox.setAttribute("class", "form-check-input today-checkbox");
+	inputCheckBox.setAttribute("type", "checkbox");
+	inputCheckBox.setAttribute("id", "flexCheckDefault" + result.taskNo);
+	
+	let spanTaskName = document.createElement("span");
+	spanTaskName.setAttribute("data-no", result.taskNo);
+	spanTaskName.setAttribute("class", "today-name");
+	spanTaskName.setAttribute("id", "taskName" + result.taskNo);
+	
+	let divOptionBtn = document.createElement("div");
+	divOptionBtn.setAttribute("class", "today-btn-option");
+	
+	let imgArrowUp = document.createElement("img");
+	imgArrowUp.setAttribute("class", "today-option-ico");
+	imgArrowUp.setAttribute("src", "../icon/arrow-up_16.svg");
+	
+	let imgArrowDown = document.createElement("img");
+	imgArrowDown.setAttribute("class", "today-option-ico");
+	imgArrowDown.setAttribute("src", "../icon/arrow-down_16.svg");
+	
+	let divCardBody = document.createElement("div");
+	divCardBody.setAttribute("class", "card-body today-body");
+	divCardBody.setAttribute("id", "body" + result.taskNo);
+	
+	let spanTagBadge = document.createElement("span");
+	spanTagBadge.setAttribute("class", "badge bg-info today-badge");
+	spanTagBadge.setAttribute("id", "tag" + result.taskNo);
+	
+	let spanTimeFrom = document.createElement("span");
+	spanTimeFrom.setAttribute("class", "badge bg-light today-badge");
+	spanTimeFrom.setAttribute("id", "timeFrom" + result.taskNo);
+	
+	let spanTimeTo = document.createElement("span");
+	spanTimeTo.setAttribute("class", "badge bg-light today-badge");
+	spanTimeTo.setAttribute("id", "timeTo" + result.taskNo);
+	
+	divOptionBtn.append(imgArrowUp, imgArrowDown);
+	divCardHeader.append(inputCheckBox, spanTaskName, divOptionBtn);
+	divCardBody.append(spanTagBadge, spanTimeFrom, spanTimeTo);
+	divCard.append(divCardHeader, divCardBody);
+	
+	console.log("-----------------");
+	console.log(result.tagNo);
+	console.log(result.taskStartTime);
+	console.log(result.taskEndTime);
+	
+	document.getElementsByClassName("today-list")[0].append(divCard);
+	
+	$('#taskName' + result.taskNo).text(result.taskName);
+	
+	if((result.tagNo === 0) && (!result.taskStartTime) && (!result.taskEndTime)) {
+        $('#body' + result.taskNo).css('display', 'none');
+	} else {
+		let startTime = "";	
+		let endTime = "";	
+		
+		(result.tagNo !== 0) ? $('#tag' + result.taskNo).text(result.tagNo) : "tag does not exist";
+		(result.taskStartTime) ? startTime = changeTimeNotation(result.taskStartTime) : "is null";
+		(result.taskEndTime) ? endTime = changeTimeNotation(result.taskEndTime) : "is null";
+		(startTime !== "") ? $('#timeFrom' + result.taskNo).text(startTime + " 부터") : "do not create element";
+		(endTime !== "") ? $('#timeTo' + result.taskNo).text(endTime + " 까지") : "do not create element";
+		
+// 		$('#timeFrom' + result.taskNo).text(startTime + " 부터");
+// 		$('#timeTo' + result.taskNo).text(endTime + " 까지");
+	}
+	// tag timeFrom timeTo 
+// 	$('#taskName10').text(result.taskName);
+}
+
+	
+/* 현재시간 표시 */
+function showClock() {
+	var currentDate = new Date();
+	var divClock = document.getElementById('divClock');
+	var msg = "현재시간은 ";
+	if (currentDate.getHours() > 12) { //시간이 12보다 크다면 오후 아니면 오전
+		msg += "PM ";
+		msg += currentDate.getHours() - 12 + ":";
+	} else {
+		msg += "AM ";
+		msg += currentDate.getHours() + ":";
+	}
+
+	if (currentDate.getMinutes() < 10) { //시간이 12보다 크다면 오후 아니면 오전
+		msg += "0";
+		msg += currentDate.getMinutes();
+	} else {
+		msg += currentDate.getMinutes();
+	}
+
+	msg += " 입니다.";
+	divClock.innerText = msg;
+	setTimeout(showClock, 1000); //1초마다 갱신
+}
+
+/* 시간표기법 변경 [AM-03-00] to [AM 03:00] */
+function changeTimeNotation(str) {
+	let words = str.split('-');
+	time = "⏰ " + words[0] + " " + words[1] + ":" + words[2]
+	console.log(time);
+	
+	return time;
+}
+
+
+</script>
+
+<body class="my-background" onload="showClock()">
+
+	<div class="my-mainboard">
+		<div class="my-menu">
+			<div class="main-menu">
+				Menu <img class="main-menu-ico" src="../icon/list-unordered.svg"></img>
+			</div>
+
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">ALARM</h6>
+				<div style="position: relative">
+					<div id="divClock"></div>
+					<img class="sub-menu-alarm-ico" src="../icon/bell-fill.svg"></img>
+				</div>
+			</div>
+			<hr width="100%" color="" />
+
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TASKS</h6>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/checklist.svg"></img> 오늘의 과제 <span class="badge bg-primary rounded-pill" id="task-badge">4</span>
+				</div>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/calendar.svg"></img> 월간 기록
+				</div>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/graph.svg"></img> 통계
+				</div>
+			</div>
+			<hr width="100%" color="" />
+
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">MY INFO</h6>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/person.svg"></img> <span id="myinfo-name">sunmin kim</span>
+				</div>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/star.svg"></img> <span id="myinfo-grade">Lv. 1</span>
+				</div>
+				<div class="sub-menu-subject">
+					<img class="sub-menu-ico" src="../icon/database.svg"></img> <span id="myinfo-point">235</span>
+				</div>
+				<!--
+                    Nickname 오른쪽 끝에 연필 아이콘으로 정보 수정 <br />
+                    Grade (마우스오버: 다음 레벨까지 ~포인트 남았습니다) <br />
+                    Point (+25 마우스오버: 오늘 획득한 포인트) <br />
+                -->
+			</div>
+
+			<div class="option-menu">
+				<div class="option-menu-subject">
+					<img class="option-menu-ico" src="../icon/gear.svg"></img> <span class="option-menu-title" id="settings"> 설정</span>
+				</div>
+				<div class="option-menu-subject">
+					<img class="option-menu-ico" src="../icon/sign-in.svg"></img> <span class="option-menu-title" id="logout"> 로그아웃</span>
+				</div>
+				<!-- 다크모드/일반모드, 사용법 -->
+			</div>
+		</div>
+
+
+
+
+
+		<div class="my-today">
+			<div class="today-title">
+				Today
+				<div id="today-ymd">2023/00/00 [[${result}]]</div>
+			</div>
+			<div class="today-btn">
+				<div class="form-group">
+					<input class="form-control today-btn-add" id="disabledInput" type="text" placeholder=" +  새 과제 등록하기 " disabled="">
+				</div>
+			</div>
+			<div class="today-list">
+
+				<div th:each="task : ${result}" class="card border-light today-list-task">
+					<div class="card-header">
+						<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault1"> <span class="today-name">기업 경영학 마케팅 조사 레포트 제출</span>
+						<div class="today-btn-option">
+							<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="today-option-ico" src="../icon/arrow-down_16.svg"></img>
+						</div>
+					</div>
+
+					<div class="card-body today-body">
+						<span class="badge bg-info today-badge">과제</span> <span class="badge bg-light today-badge">⏰ AM 10:00 부터</span> <span class="badge bg-light today-badge">⏰ AM 11:00 까지</span>
+					</div>
+				</div>
+
+
+
+
+
+				<!-- 1번 -->
+<!-- 								<div class="card border-light today-list-task"> -->
+<!-- 									<div class="card-header"> -->
+<!-- 										<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault1"> <span class="today-name">기업 경영학 마케팅 조사 레포트 제출</span> -->
+<!-- 										<div class="today-btn-option"> -->
+<!-- 											<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="today-option-ico" src="../icon/arrow-down_16.svg"></img> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 									<div class="card-body today-body"> -->
+<!-- 										<span class="badge bg-info today-badge">과제</span> <span class="badge bg-light today-badge">⏰ AM 10:00 부터</span> <span class="badge bg-light today-badge">⏰ AM 11:00 까지</span> -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+
+				<!-- 2번 -->
+				<!-- 				<div class="card border-light today-list-task"> -->
+				<!-- 					<div class="card-header"> -->
+				<!-- 						<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault2"> <span class="today-name">한강 러닝 3km</span> -->
+				<!-- 						<div class="today-btn-option"> -->
+				<!-- 							<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="today-option-ico" src="../icon/arrow-down_16.svg"></img> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 					<div class="card-body today-body"> -->
+				<!-- 						<span class="badge bg-info today-badge"></span> <span class="badge bg-light today-badge"></span> <span class="badge bg-light today-badge"></span> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
+
+				<!-- 3번 -->
+				<!-- 				<div class="card border-light today-list-task"> -->
+				<!-- 					<div class="card-header"> -->
+				<!-- 						<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault3"> <span class="today-name">코인빨래방 세탁 건조</span> -->
+				<!-- 						<div class="today-btn-option"> -->
+				<!-- 							<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="today-option-ico" src="../icon/arrow-down_16.svg"></img> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
+
+				<!-- 4번 -->
+				<!-- 				<div class="card border-light today-list-task"> -->
+				<!-- 					<div class="card-header"> -->
+				<!-- 						<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault4"> <span class="today-name">재활용품 분리수거</span> -->
+				<!-- 						<div class="today-btn-option"> -->
+				<!-- 							<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="today-option-ico" src="../icon/arrow-down_16.svg"></img> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
+			</div>
+			<button type="button" class="test-btn" data-option="create">등록 테스트</button>
+			<button type="button" class="test-btn" data-option="read">조회 테스트</button>
+			<button type="button" class="test-btn" data-option="update">수정 버튼</button>
+		</div>
+
+
+
+
+
+		<!-- task create -->
+		<div class="my-controller create">
+			<div class="main-menu">New Task</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TITLE</h6>
+				<input class="controller-task-title" type="text" name="" placeholder="과제의 이름을 지어주세요." />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">DESCRIPTION</h6>
+				<textarea class="controller-task-desc" placeholder="필요 시 상세 설명을 적어보세요."></textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label> <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio2">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>0</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th class="time-td">시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th class="time-td">분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio3" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio3">am</label> <input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect3">
+								<option>12</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th>시</th>
+						<td><select class="form-select time-select" id="exampleSelect4">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th>분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TAG</h6>
+				<div class="input-group controller-task-tag" style="width: 304px;">
+					<input type="text" class="form-control task-input-add" placeholder="필요 시 새 태그를 생성하세요." aria-label="Recipient's username" aria-describedby="button-addon2">
+					<button class="btn btn-primary tag-btn-add" type="button" id="button-addon2">생성</button>
+				</div>
+				<div>
+					<span class="badge bg-info tag-badge">과제</span>
+				</div>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-primary btn-lg controller-btn-create">등록</button>
+				<button type="button" class="btn btn-secondary btn-lg controller-btn-create">취소</button>
+			</div>
+		</div>
+
+
+
+
+
+		<!-- task read -->
+		<div class="my-controller read">
+			<div class="main-menu">Information</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TITLE</h6>
+				<input class="controller-task-title" type="text" name="" value="한강 러닝 3km" disabled="" />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">DESCRIPTION</h6>
+				<textarea class="controller-task-desc" disabled="">염창나들목~합수부 방향. 6'30'' 페이스.</textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="" disabled=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label>
+							</div>
+						</td>
+						<th class="time-td start-hour">9 시</th>
+						<th class="time-td start-minute">30 분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off" checked="" disabled=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<th class="time-td end-hour">10 시</th>
+						<th class="time-td end-minute">00 분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-warning btn-lg controller-btn-read">수정</button>
+				<button type="button" class="btn btn-secondary btn-lg controller-btn-read">닫기</button>
+			</div>
+		</div>
+
+
+
+		<!-- task update -->
+		<div class="my-controller update">
+			<div class="main-menu">Modify</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TITLE</h6>
+				<input class="controller-task-title" id="task-title" type="text" name="" value="한강 러닝 3km" placeholder="과제의 이름을 지어주세요." />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">DESCRIPTION</h6>
+				<textarea class="controller-task-desc" id="task-desc" placeholder="필요 시 상세 설명을 적어보세요.">염창나들목~합수부 방향. 6'30'' 페이스.</textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label> <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio2">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>0</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th class="time-td">시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th class="time-td">분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio3" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio3">am</label> <input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>12</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th>시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th>분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-title">TAG</h6>
+				<div class="input-group controller-task-tag" style="width: 304px;">
+					<input type="text" class="form-control task-input-add" name="tagName" placeholder="필요 시 새 태그를 생성하세요." aria-label="Recipient's username" aria-describedby="button-addon2">
+					<button class="btn btn-primary tag-btn-add" type="button" id="button-addon2">생성</button>
+				</div>
+				<div>
+					<span class="badge bg-info tag-badge">과제</span>
+				</div>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-warning btn-lg controller-btn-update">수정 완료</button>
+				<button type="button" class="btn btn-primary btn-lg controller-btn-update">삭제</button>
+				<button type="button" class="btn btn-secondary btn-lg controller-btn-update">취소</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

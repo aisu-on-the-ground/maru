@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lab.aisu.dao.TaskDAO">
+
+	<insert id="insertTask" parameterType="com.lab.aisu.dto.TaskDTO">
+		INSERT INTO
+		t_task (
+				member_no,
+				task_order,
+				tag_no,
+				task_name,
+				task_desc,
+				task_start_time,
+				task_end_time,
+				task_reg_ymd
+				)
+		VALUES (
+				#{memberNo},
+				#{taskOrder},
+				#{tagNo},
+				#{taskName},
+				#{taskDesc},
+				#{taskStartTime},
+				#{taskEndTime},
+				date_format(now(), '%Y%m%d')
+				)
+		<selectKey resultType="int" keyProperty="taskOrder" keyColumn="task_no" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+
+	<update id="updateTaskOrder" parameterType="int">
+		UPDATE t_task
+		SET task_order = #{taskOrder}
+		WHERE task_no = #{taskNo}
+	</update>
+
+	<select id="selectTaskOrderBoth" parameterType="com.lab.aisu.util.TaskOrderChanger" resultType="com.lab.aisu.util.TaskOrderChanger">
+		SELECT task_no, task_order, task_name 
+		FROM t_task
+		WHERE member_no = #{memberNo}
+		AND task_status = 'F'
+		<choose>
+			<when test = 'direction.equals("up")'>
+				<![CDATA[
+				AND task_order <= #{taskOrder}  ORDER BY task_order DESC LIMIT 2
+				]]>
+			</when>
+			<when test = 'direction.equals("down")'>
+				<![CDATA[
+				AND task_order >= #{taskOrder} ORDER BY task_order ASC LIMIT 2
+				]]>
+			</when>
+		</choose>
+	</select>
+
+	<select id="selectTaskOrderBothMap" parameterType="hashmap" resultType="hashmap">
+		SELECT task_no, task_order, task_name 
+		FROM t_task
+		WHERE member_no = #{memberNo}
+		AND task_status = 'F'
+		<choose>
+			<when test = 'direction.equals("up")'>
+				<![CDATA[
+				AND task_order <= #{taskOrder}  ORDER BY task_order DESC LIMIT 2
+				]]>
+			</when>
+			<when test = 'direction.equals("down")'>
+				<![CDATA[
+				AND task_order >= #{taskOrder} ORDER BY task_order ASC LIMIT 2
+				]]>
+			</when>
+		</choose>
+	</select>
+
+	<select id="selectTask" parameterType="int" resultType="com.lab.aisu.dto.TaskDTO">
+		SELECT * FROM t_task
+		WHERE member_no = #{memberNo}
+		AND task_no = #{taskNo}
+	</select>
+
+	<select id="selectTaskList" parameterType="int" resultType="com.lab.aisu.dto.TaskDTO">
+		SELECT * FROM t_task
+		WHERE member_no = #{memberNo}
+		AND task_status = 'F'
+		ORDER BY task_order ASC
+	</select>
+
+	<update id="updateTask" parameterType="com.lab.aisu.dto.TaskDTO">
+		UPDATE t_task
+		SET tag_no = #{tagNo},
+			task_name = #{taskName},
+			task_desc = #{taskDesc},
+			task_start_time = #{taskStartTime},
+			task_end_time = #{taskEndTime}
+		WHERE task_no = #{taskNo}
+	</update>
+
+	<update id="updateTaskStatus" parameterType="int">
+		UPDATE t_task
+		SET task_status = 'T',
+			task_fin_ymd = date_format(now(), '%Y%m%d')
+		WHERE task_no = #{taskNo}
+	</update>
+
+</mapper>

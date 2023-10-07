@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lab.aisu.dao.TagDAO">
+
+	<insert id="insertTag" parameterType="com.lab.aisu.dto.TagDTO">
+		INSERT INTO
+		t_tag (
+				member_no,
+				tag_name
+				)
+		VALUES (
+				#{memberNo},
+				#{tagName}
+				)
+		<selectKey resultType="int" keyProperty="tagNo" keyColumn="tag_no" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	
+	<select id="selectTag" parameterType="int" resultType="com.lab.aisu.dto.TagDTO">
+		SELECT *
+		FROM t_tag
+		WHERE tag_no = #{tagNo}
+	</select>
+	
+	<select id="selectTagList" parameterType="int" resultType="com.lab.aisu.dto.TagDTO">
+		SELECT *
+		FROM t_tag
+		WHERE member_no = #{memberNo}
+		AND tag_status = 'T'
+	</select>
+	
+	<select id="selectSameTagName" parameterType="hashmap" resultType="com.lab.aisu.dto.TagDTO">
+		SELECT *
+		FROM t_tag
+		WHERE tag_name = #{tagName}
+		AND member_no = #{memberNo}
+	</select>
+
+	<update id="updateTag" parameterType="com.lab.aisu.dto.TagDTO">
+		UPDATE t_tag
+		SET tag_name = #{tagName},
+			tag_status = #{tagStatus}
+		WHERE tag_no = #{tagNo}
+	</update>
+	
+<!-- 	<update id="deleteTag" parameterType="int"> -->
+<!-- 		UPDATE t_tag -->
+<!-- 		SET tag_status = 'F' -->
+<!-- 		WHERE tag_no = #{tagNo} -->
+<!-- 	</update> -->
+
+</mapper>

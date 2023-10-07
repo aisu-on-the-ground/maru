@@ -10,5 +10,9 @@
 		values
 		(#{roleId}, #{description})
 	</insert>
+	
+	<select id="selectRole" parameterType="int" resultType="hashmap">
+		select * from role where role_id = #{roleId}
+	</select>
 
 </mapper>

@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'arial-black'; /*font 이름*/
+/*    font-style: 'normal';*/
+/*    font-weight: 400;*/
+    
+    /* 브라우저&디바이스 환경에 따른 font 파일 위치 정의 */
+    src: url('../fonts/arialblack.woff'); /* IE9 Compat Modes */
+    src: url('../fonts/arialblack.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ 
+        url('../fonts/arialblack.woff2') format('woff2'), /*  Modern Browsers */ 
+        url('../fonts/arialblack.woff') format('woff'), /* Modern Browsers */ 
+        url('../fonts/arialblack.ttf') format('truetype'),  /* Safari, Android, iOS */ 
+        url('../fonts/arialblack.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'verdana'; /*font 이름*/
+/*    font-style: 'normal';*/
+/*    font-weight: 400;*/
+    
+    /* 브라우저&디바이스 환경에 따른 font 파일 위치 정의 */
+    src: url('../fonts/verdana.woff'); /* IE9 Compat Modes */
+    src: url('../fonts/verdana.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ 
+        url('../fonts/verdana.woff2') format('woff2'), /*  Modern Browsers */ 
+        url('../fonts/verdana.woff') format('woff'), /* Modern Browsers */ 
+        url('../fonts/verdana.ttf') format('truetype')  /* Safari, Android, iOS */
+}
+
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 400;
+	font-display: swap;
+	src: local('Pretendard Regular'), url('./woff2/Pretendard-Regular.woff2') format('woff2'), url('./woff/Pretendard-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Pretendard-ExtraBold';
+	font-weight: 800;
+	font-display: swap;
+	src: local('Pretendard ExtraBold'), url('./woff2/Pretendard-ExtraBold.woff2') format('woff2'), url('./woff/Pretendard-ExtraBold.woff') format('woff');
+}

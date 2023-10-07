@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Thymeleaf 예제</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h1>Thymeleaf 예제</h1>
+		<span th:text="${task.taskName}"></span>
+		<br />
+		<span th:text="${task.taskDesc}"></span>
+		<br />
+		<span th:text="${task.taskStartTime}"></span>
+		<br />
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+<div class="card border-light today-list-task">
+
+	<div class="card-header">
+		<input class="form-check-input today-checkbox" type="checkbox" value="" id="flexCheckDefault1"> 
+		<span class="today-name">기업 경영학 마케팅 조사 레포트 제출</span>
+		<div class="today-btn-option">
+			<img class="today-option-ico" src="../icon/arrow-up_16.svg"></img> 
+			<img class="today-option-ico" src="../icon/arrow-down_16.svg"></img>
+		</div>
+	</div>
+
+	<div class="card-body today-body">
+		<span class="badge bg-info today-badge">과제</span> 
+		<span class="badge bg-light today-badge">⏰ AM 10:00 부터</span> 
+		<span class="badge bg-light today-badge">⏰ AM 11:00 까지</span>
+	</div>
+
+</div>

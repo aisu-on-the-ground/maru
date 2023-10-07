@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lab.aisu.dao.PointDAO">
+
+	<insert id="insertPointNewMember" parameterType="int">
+		INSERT INTO
+		t_point (
+		member_no
+		)
+		VALUES (
+		#{memberNo}
+		)
+	</insert>
+
+	<select id="selectPointInfo" parameterType="int" resultType="com.lab.aisu.dto.PointDTO">
+		SELECT member_no, point_balance, point_grade
+		FROM t_point
+		WHERE member_no = #{memberNo}
+		ORDER BY point_order DESC
+	</select>
+	
+	<select id="selectPointOfToday" parameterType="int" resultType="int">
+		SELECT SUM(point_amount)
+		FROM t_point
+		WHERE member_no = #{memberNo}
+		AND point_ymd = date_format(now(), '%Y%m%d')
+		AND point_type = '+'
+	</select>
+
+	<insert id="insertPoint" parameterType="com.lab.aisu.dto.PointDTO">
+		INSERT INTO t_point (member_no, point_ymd, point_type, point_amount, point_balance)
+		SELECT member_no, date_format(now(), '%Y%m%d'), #{pointType}, #{pointAmount}, point_balance ${pointType} #{pointAmount}
+		FROM t_point 
+		WHERE member_no = #{memberNo}
+		ORDER BY point_order DESC 
+		LIMIT 1
+	</insert>
+	
+	<insert id="insertGradeUp" parameterType="int">
+		INSERT INTO t_point (member_no, point_ymd, point_type, point_amount, point_balance, point_grade, point_info)
+		SELECT member_no, date_format(now(), '%Y%m%d'), '-', #{pointAmount}, point_balance - #{pointAmount}, point_grade + 1, '등급 상승'
+		FROM t_point 
+		WHERE member_no = #{memberNo}
+		ORDER BY point_order DESC 
+		LIMIT 1
+	</insert>
+	
+<!-- 	<insert id="insertPoint" parameterType="com.lab.aisu.dto.PointDTO"> -->
+<!-- 		INSERT INTO t_point (member_no, point_ymd, point_type, point_amount, point_balance) -->
+<!-- 		SELECT member_no, date_format(now(), '%Y%m%d'), #{pointType}, #{pointAmount}, -->
+<!-- 		<choose> -->
+<!-- 			<when test = "pointType == '+'"> -->
+<!-- 				point_balance + #{pointAmount} -->
+<!-- 			</when> -->
+<!-- 			<when test = "pointType == '-'"> -->
+<!-- 				point_balance - #{pointAmount} -->
+<!-- 			</when> -->
+<!-- 		</choose> -->
+<!-- 		FROM t_point  -->
+<!-- 		WHERE member_no = #{memberNo} -->
+<!-- 		ORDER BY point_order DESC  -->
+<!-- 		LIMIT 1 -->
+<!-- 	</insert> -->
+
+
+
+
+	<!-- <select id="selectTagList" parameterType="int" resultType="com.lab.aisu.dto.PointDTO"> -->
+	<!-- SELECT * -->
+	<!-- FROM t_point -->
+	<!-- WHERE member_no = #{memberNo} -->
+	<!-- AND tag_status = 'T' -->
+	<!-- </select> -->
+
+	<!-- <select id="selectSameTagName" parameterType="hashmap" resultType="com.lab.aisu.dto.PointDTO"> -->
+	<!-- SELECT * -->
+	<!-- FROM t_point -->
+	<!-- WHERE tag_name = #{pointName} -->
+	<!-- AND member_no = #{memberNo} -->
+	<!-- </select> -->
+
+	<!-- <update id="updateTag" parameterType="com.lab.aisu.dto.PointDTO"> -->
+	<!-- UPDATE t_point -->
+	<!-- SET tag_name = #{pointName}, -->
+	<!-- tag_status = #{pointStatus} -->
+	<!-- WHERE tag_no = #{pointNo} -->
+	<!-- </update> -->
+</mapper>

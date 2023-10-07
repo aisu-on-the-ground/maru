@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/todomanager.css">
+    <link rel="stylesheet" href="../css/font.css">
+</head>
+
+<body class="my-background">
+    <div class="my-loginboard">
+        <div class="my-login">
+            <div class="login-title">
+                LOGIN
+            </div>
+            <div>
+                <div class="input-group">
+                    <span class="input-group-text login-blank">
+                        <img class="log-ico" src="../icon/person.svg"></img>
+                    </span>
+                    <input type="text" class="form-control login-input" id="input-id" placeholder="ID" name="memberId" aria-label="Amount (to the nearest dollar)">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text login-blank">
+                        <img class="log-ico" style="width: 18px; margin-left: 2px;" src="../icon/key.svg"></img>
+                    </span>
+                    <input type="password" class="form-control login-input" id="input-pw" placeholder="Password" onkeypress="enterkey()" name="memberPw" aria-label="Amount (to the nearest dollar)">
+                </div>
+            </div>
+            <div style="position:absolute; font-size: 14px; padding-top: 5px;">
+                <input class="form-check-input login-id-check" type="checkbox" value="" id="flexCheckDefault1">
+                <label for="id-check">&nbsp;아이디 기억하기</label>
+            </div>
+            <div>
+                <button class="btn btn-lg btn-primary" id="btn-login" type="button">로그인</button>
+            </div>
+        </div>
+        <div class="login-sub-tab">
+            <div>
+                <span class="login-sub-option">
+                    <a href="" class="sub-option-a">아이디 찾기</a>
+                </span>
+                <span class="login-sub-separation">&nbsp;|&nbsp;</span>
+                <span class="login-sub-option">
+                    <a href="" class="sub-option-a">비밀번호 찾기</a>
+                </span>
+                <span class="login-sub-separation">&nbsp;|&nbsp;</span>
+                <span class="login-sub-option">
+                    <a href="" class="sub-option-a">회원가입</a>
+                </span>
+            </div>
+        </div>
+    </div>
+
+	
+		<script type="text/javascript">
+	    $('#btn-login').on('click', function() {
+			var memberId = $("#input-id").val();
+		    var memberPw = $("#input-pw").val();
+		    
+// 		    var asdf = 'qwer';
+	    	
+// 			var params = new URLSearchParams();
+// 			params.set("memberId", id);
+// 			params.set("memberPw", pw);
+// 			console.log("params: " + params);
+			
+			var data = {
+				method: 'POST',
+				body: JSON.stringify({ memberId, memberPw }),
+// 				body: JSON.stringify({ test: asdf }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+			
+			fetch('/member/rest/login', data)
+			.then(res => res.json())
+			.then(json => {
+				console.log("res.json(): " + json);
+				console.log(Object.prototype.toString.call(json));
+// 				alert("로그인 성공");
+				location.replace("/menu");
+			})
+			.catch(error => {
+				console.log("error: " + error);
+				alert("아이디 또는 비밀번호가 틀렸습니다.");
+			})
+	    });
+	    
+	    function enterkey() {
+	    	if (window.event.keyCode == 13) {
+	        	// 엔터키가 눌렸을 때
+	        	document.getElementById("btn-login").click();
+	        }
+	    }
+		</script>
+
+</body>
+</html>

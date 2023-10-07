@@ -33,11 +33,16 @@ class DBConfig implements TransactionManagementConfigurer {
 //	private String username = "board_ex";
 //	private String password = "board_ex";
 	
-	private String driverClassName = "com.mysql.jdbc.Driver";
+//	private String driverClassName = "com.mysql.jdbc.Driver";
 //	private String driverClassName = "com.mysql.cj.jdbc.Driver"; // mysql-connecter-java 8 이후
-	private String url = "jdbc:mysql://localhost:3306/connectdb?useUnicode=true&characterEncoding=utf8";
-	private String username = "root";
-	private String password = "root";
+//	private String url = "jdbc:mysql://localhost:3306/maru?useUnicode=true&characterEncoding=utf8";
+//	private String username = "aisu";
+//	private String password = "aisu";
+	
+	private String driverClassName = "net.sf.log4jdbc.sql.jdbcapi.DriverSpy";
+	private String url = "jdbc:log4jdbc:mysql://localhost:3306/maru?useUnicode=true&characterEncoding=utf8";
+	private String username = "aisu";
+	private String password = "aisu";
 
 	@Bean // 코배스 pdf p.83 참고 (hikariCP의 dataSource Java Config)
 	public DataSource dataSource() {

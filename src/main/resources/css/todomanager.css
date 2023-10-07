@@ -1,0 +1,526 @@
+/*
+	색상표
+*/
+
+div {
+    /*    border: 1px solid gray;*/
+}
+
+.my-background {
+    /*    height: 100vh;*/
+    /*    height: 1080px;*/
+    background-color: #D2E2D3;
+    display: block;
+    /*    margin: 0 auto;*/
+    /*    justify-content: center;*/
+    /*    align-items: center;*/
+
+    /*    position: relative;*/
+}
+
+.my-mainboard {
+    background-color: #FFFFFF;
+    width: 1440px;
+    height: 814px;
+    /*    width: 75%;*/
+    /*    height: 75%;*/
+    border-radius: 30px;
+    /*    position: relative;*/
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    position: absolute;
+}
+
+.my-loginboard {
+    background-color: #FFFFFF;
+    width: 410px;
+    height: 300px;
+    /*    width: 25%;*/
+    /*    height: 30%;*/
+    border-radius: 24px;
+    /*    position: relative;*/
+
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    position: absolute;
+
+    font-family: "Pretendard";
+}
+
+.my-menu {
+    display: inline-block;
+    /*    width: 23%;*/
+    width: 330px;
+    /*    height: 95.2%;*/
+    height: 780px;
+    /*    margin: 1.3%;*/
+    margin: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 14px;
+    border-radius: 20px;
+    vertical-align: middle;
+
+    background-color: #FAF9F9;
+}
+
+.option-menu {
+    position: absolute;
+    bottom: 3.8%;
+}
+
+.option-menu-title {
+    cursor: pointer;
+}
+
+
+.my-today {
+    display: inline-block;
+    /*    width: 40%;*/
+    width: 588px;
+    /*    height: 96.4%;*/
+    height: 780px;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: "Pretendard";
+}
+
+.my-controller {
+    display: inline-block;
+    /*    display: inline-block;*/
+    width: 450px;
+    /*    width: 31.2%;*/
+    height: 780px;
+    /*    height: 95.2%;*/
+    margin: 16px;
+    /*    margin: 1.3%;*/
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 14px;
+    border-radius: 20px;
+    vertical-align: middle;
+
+    background-color: #FAF9F9;
+
+    position: relative;
+
+    font-family: "Pretendard";
+}
+
+.test {
+    width: 80%;
+    height: 75%;
+}
+
+.my-controller-default {
+    font-size: 30px;
+    color: darkgrey;
+    text-align: center;
+    line-height: 25.5
+}
+
+.controller-task-title {
+    display: block;
+    font-family: 'Pretendard';
+    width: 100%;
+}
+
+.controller-task-title::placeholder {
+    padding-left: 3px;
+    color: darkgrey;
+}
+
+.my-today-updown_btn {
+    display: flex;
+    justify-content: flex-end
+}
+
+.my-today-li {
+    position: relative;
+    width: 100%;
+}
+
+.my-today-updownbtn {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+}
+
+.main-menu {
+    position: relative;
+    margin-bottom: 30px;
+    display: inline-block;
+    font-family: 'arial-black';
+    font-size: 30px;
+    width: 100%;
+}
+
+.sub-menu {
+    margin-bottom: 20px;
+}
+
+.sub-menu-ico {
+    margin-right: 10px;
+    padding-bottom: 2px;
+}
+
+.option-menu-subject {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 900;
+    font-family: 'Pretendard-ExtraBold';
+}
+
+.sub-menu-title {
+    font-size: 14px;
+    font-family: 'arial-black';
+}
+
+#divClock {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 400;
+    color: dimgrey;
+    font-family: 'Pretendard';
+}
+
+.main-menu-ico {
+    position: absolute;
+    right: 0%;
+    padding-top: 8px;
+    display: inline-block;
+}
+
+.menu-title {
+    /*
+    display: inline-block;
+    font-family: 'arial-black';
+    font-size: 30px;
+*/
+}
+
+.sub-menu-subject {
+    position: relative;
+    height: 34px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    color: dimgrey;
+    font-family: 'Pretendard';
+}
+
+.sub-menu-alarm-ico {
+    position: absolute;
+    right: 0%;
+    display: inline-block;
+    padding-top: 2px;
+}
+
+.option-menu-ico {
+    margin-right: 10px;
+    padding-bottom: 2px;
+}
+
+
+
+#today-ymd {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    bottom: 9px;
+    font-family: 'Pretendard';
+    font-size: 22px;
+    letter-spacing: 0px;
+    color: lightgray;
+}
+
+.today-title {
+    position: relative;
+    margin-bottom: 26px;
+    font-family: 'arial-black';
+    font-size: 50px;
+    color: #F05C28;
+    letter-spacing: 2px;
+    display: inline-block;
+    width: 100%;
+}
+
+.today-btn-add {
+    height: 54px;
+    font-family: 'Pretendard';
+    font-weight: 100;
+    margin-bottom: 28px;
+    cursor: pointer;
+}
+
+.today-btn-add::placeholder {
+    color: darkgrey;
+    font-size: 18px;
+}
+
+#task-badge {
+    position: absolute;
+    right: 0px;
+    top: 2px;
+    padding-top: 5px;
+}
+
+.today-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.today-badge {
+    margin-right: 5px;
+}
+
+.list-time {
+    margin-right: 5px;
+}
+
+.today-checkbox {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+.today-tasklist {
+    /*    font-family: 'Pretendard';*/
+}
+
+.today-name {
+    display: inline-block;
+    width: 80%;
+    cursor: pointer;
+}
+
+.today-name:hover {
+    text-decoration: underline;
+}
+
+.today-btn-option {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    margin-right: 12px;
+}
+
+.today-option-ico {
+    cursor: pointer;
+    margin-left: 3px;
+}
+
+.controller-title {
+    position: relative;
+    margin-bottom: 30px;
+    display: inline-block;
+    font-family: 'arial-black';
+    font-size: 30px;
+    width: 100%;
+}
+
+.time-select {
+    height: 32px;
+}
+
+.ampm {
+    margin-right: 10px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.ampm-read {
+    margin-right: 10px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    display: inline-block;
+}
+
+.time-td {
+    padding-right: 10px;
+    text-align: right;
+}
+
+.controller-task-desc {
+    display: block;
+    width: 100%;
+    height: 8em;
+    resize: none;
+}
+
+.my-controller-read-textarea {
+    display: block;
+    width: 100%;
+    height: 16em;
+    resize: none;
+}
+
+.controller-task-desc::placeholder {
+    padding-left: 3px;
+    color: darkgrey;
+}
+
+.time-from {
+    font-family: 'Pretendard';
+}
+
+.time-to {
+    font-family: 'Pretendard';
+}
+
+.task-input-add::placeholder {
+    color: darkgray;
+}
+
+.tag-badge {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 14px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-family: 'Pretendard';
+}
+
+.controller-btn {
+    position: absolute;
+    bottom: 0px;
+    right: 22px;
+    font-family: 'Pretendard';
+}
+
+
+
+
+
+.controller-btn-create {
+    width: 200px;
+}
+
+.btn-read {
+    width: 200px;
+}
+
+
+
+.arrow {
+    margin-right: 0px;
+}
+
+.my-controller.create {
+    display: inline-block;
+}
+
+
+
+.my-controller.read {
+    display: none;
+}
+
+.my-controller.update {
+    display: none;
+}
+
+.login-sub-tab {
+    position: absolute;
+    bottom: -23px;
+    left: 36%;
+    transform: translate(-30%, 30%);
+    font-size: 15px;
+}
+
+.login-sub-separation {
+    font-size: 14px;
+    color: darkgray;
+}
+
+
+
+.sub-option-a {
+    color: gray;
+}
+
+.sub-option-a:hover {
+    text-decoration: underline;
+}
+
+.my-login {
+    display: inline-block;
+    /*    width: 350px;*/
+    /*    height: 770px;*/
+    /*    margin: 15px;*/
+    width: 95%;
+    height: 94%;
+    margin: 2.4%;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    border-radius: 20px;
+    vertical-align: middle;
+
+    text-align: center;
+
+    background-color: #FAF9F9;
+}
+
+.log-ico {
+    width: 22px;
+}
+
+.login-blank {
+    width: 48px;
+}
+
+
+
+#btn-login {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.login-input::placeholder {
+    color: lightgray;
+}
+
+.today-list-task {
+    margin-bottom: 8px;
+}
+
+.controller-task-tag {
+    margin-bottom: 10px;
+}
+
+.controller-btn-update {
+    width: 132px;
+}
+
+.controller-btn-read {
+    width: 200px;
+}
+.login-title {
+/*    position: relative;*/
+    margin-bottom: 18px;
+    font-family: 'arial-black';
+    font-size: 50px;
+    color: #F05C28;
+    letter-spacing: 1px;
+    display: inline-block;
+    width: 100%;
+    
+}

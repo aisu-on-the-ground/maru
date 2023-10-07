@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+<meta charset="utf-8">
+<title>maru</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="../bootstrap/bootstrap.css"></link>
+<link rel="stylesheet" href="../css/todomanager.css"></link>
+<link rel="stylesheet" href="../css/font.css">
+</head>
+
+<script>
+	function showClock() {
+		var currentDate = new Date();
+		var divClock = document.getElementById('divClock');
+		var msg = "현재시간은 ";
+		if (currentDate.getHours() > 12) { //시간이 12보다 크다면 오후 아니면 오전
+			msg += "PM ";
+			msg += currentDate.getHours() - 12 + ":";
+		} else {
+			msg += "AM ";
+			msg += currentDate.getHours() + ":";
+		}
+
+		if (currentDate.getMinutes() < 10) { //시간이 12보다 크다면 오후 아니면 오전
+			msg += "0";
+			msg += currentDate.getMinutes();
+		} else {
+			msg += currentDate.getMinutes();
+		}
+
+		msg += " 입니다.";
+		divClock.innerText = msg;
+		setTimeout(showClock, 1000); //1초마다 갱신
+	}
+</script>
+<script>
+	$(document).ready(function() {
+		$(document).on("click", "button[class='test-btn']", function() {
+			var option = $(this).data('option');
+
+			console.log(option);
+
+			switch (option) {
+			case 'create':
+				$('.my-controller.create').css('display', 'inline-block');
+				$('.my-controller.read').css('display', 'none');
+				$('.my-controller.update').css('display', 'none');
+				break;
+			case 'read':
+				$('.my-controller.create').css('display', 'none');
+				$('.my-controller.read').css('display', 'inline-block');
+				$('.my-controller.update').css('display', 'none');
+				break;
+			case 'update':
+				$('.my-controller.create').css('display', 'none');
+				$('.my-controller.read').css('display', 'none');
+				$('.my-controller.update').css('display', 'inline-block');
+				break;
+			}
+		})
+	});
+</script>
+
+<body class="my-background" onload="showClock()">
+	<div class="my-mainboard">
+		<div class="my-menu">
+			<div class="MENU main-menu">
+				<h3 class="menu-name">Menu</h3>
+				<img class="main-menu-ico" src="../icon/list-unordered.svg"></img>
+			</div>
+			<div class="ALARM sub-menu">
+				<h6 class="sub-menu-name">ALARM</h6>
+				<div style="position: relative">
+					<div id="divClock"></div>
+					<img class="sub-menu-alarm-ico" src="../icon/bell-fill.svg"></img>
+				</div>
+			</div>
+			<hr width="100%" color="" />
+
+			<div class="TASKS sub-menu">
+				<h6 class="sub-menu-name">TASKS</h6>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/checklist.svg"></img> 오늘의 과제 <span class="badge bg-primary rounded-pill task-badge">4</span>
+				</div>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/calendar.svg"></img> 월간 기록
+				</div>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/graph.svg"></img> 통계
+				</div>
+			</div>
+			<hr width="100%" color="" />
+
+			<div class="MYINFO">
+				<h6 class="sub-menu-name">MY INFO</h6>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/person.svg"></img> sunmin kim
+					<br />
+				</div>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/star.svg"></img> Lv. 1
+					<br />
+				</div>
+				<div class="sub-menu-subject">
+					<img class="menu-ico" src="../icon/database.svg"></img> 235
+					<br />
+				</div>
+				<!--
+                    Nickname 오른쪽 끝에 연필 아이콘으로 정보 수정 <br />
+                    Grade (마우스오버: 다음 레벨까지 ~포인트 남았습니다) <br />
+                    Point (+25 마우스오버: 오늘 획득한 포인트) <br />
+                -->
+			</div>
+
+			<div class="my-menu-etc">
+				<div class="sub-menu-settings">
+					<img class="menu-settings-ico" src="../icon/gear.svg"></img>설정
+				</div>
+				<div class="sub-menu-settings">
+					<img class="menu-settings-ico" src="../icon/sign-in.svg"></img>로그아웃
+				</div>
+				<!-- 다크모드/일반모드, 사용법 -->
+			</div>
+		</div>
+
+
+
+
+
+		<div class="my-list">
+			<div class="LIST main-list">
+				<div class="main-list-name">Today</div>
+				<div id="divYmd">2023/00/00</div>
+			</div>
+			<div class="main-list-btn">
+				<div class="form-group">
+					<input class="form-control list-btn-add" id="disabledInput" type="text" placeholder=" +  새 과제 등록하기 " disabled="">
+				</div>
+			</div>
+			<div class="main-list-list">
+				<div class="card border-light mb-3" style="margin-bottom: 5px;">
+					<div class="card-header">
+						<input class="form-check-input list-checkbox" type="checkbox" value="" id="flexCheckDefault1"> <span class="list-name">기업 경영학 마케팅 조사 레포트 제출</span>
+						<div class="list-btn-option">
+							<img class="list-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="list-option-ico" src="../icon/arrow-down_16.svg"></img>
+						</div>
+					</div>
+					<div class="card-body list-body">
+						<span class="badge bg-info list-badge">과제</span> <span class="badge bg-light list-badge">⏰ AM 10:00 부터</span> <span class="badge bg-light list-badge">⏰ AM 11:00 까지</span>
+					</div>
+				</div>
+
+				<div class="card border-light mb-3">
+					<div class="card-header">
+						<input class="form-check-input list-checkbox" type="checkbox" value="" id="flexCheckDefault2"> <span class="list-name">한강 러닝 3km</span>
+						<div class="list-btn-option">
+							<img class="list-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="list-option-ico" src="../icon/arrow-down_16.svg"></img>
+						</div>
+					</div>
+				</div>
+
+				<div class="card border-light mb-3">
+					<div class="card-header">
+						<input class="form-check-input list-checkbox" type="checkbox" value="" id="flexCheckDefault3"> <span class="list-name">코인빨래방 세탁 건조</span>
+						<div class="list-btn-option">
+							<img class="list-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="list-option-ico" src="../icon/arrow-down_16.svg"></img>
+						</div>
+					</div>
+				</div>
+				<div class="card border-light mb-3">
+					<div class="card-header">
+						<input class="form-check-input list-checkbox" type="checkbox" value="" id="flexCheckDefault4"> <span class="list-name">재활용품 분리수거</span>
+						<div class="list-btn-option">
+							<img class="list-option-ico" src="../icon/arrow-up_16.svg"></img> <img class="list-option-ico" src="../icon/arrow-down_16.svg"></img>
+						</div>
+					</div>
+				</div>
+				<button type="button" class="test-btn" data-option="create">등록 테스트</button>
+				<button type="button" class="test-btn" data-option="read">조회 테스트</button>
+				<button type="button" class="test-btn" data-option="update">수정 버튼</button>
+			</div>
+		</div>
+
+
+
+
+
+		<!-- task create -->
+		<div class="my-controller create">
+			<div class="CONTROLLER controller-add">New Task</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TITLE</h6>
+				<input class="my-controller-add-input" type="text" name="" placeholder="과제의 이름을 지어주세요." />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">DESCRIPTION</h6>
+				<textarea class="my-controller-add-textarea" placeholder="필요 시 상세 설명을 적어보세요."></textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label> <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio2">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>0</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th class="time-td">시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th class="time-td">분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio3" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio3">am</label> <input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect3">
+								<option>12</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th>시</th>
+						<td><select class="form-select time-select" id="exampleSelect4">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th>분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TAG</h6>
+				<div class="input-group mb-3" style="width: 304px;">
+					<input type="text" class="form-control my-controller-add-tag" placeholder="필요 시 새 태그를 생성하세요." aria-label="Recipient's username" aria-describedby="button-addon2">
+					<button class="btn btn-primary my-controller-add-tag" type="button" id="button-addon2">생성</button>
+				</div>
+				<div>
+					<span class="badge bg-info add-badge">과제</span>
+				</div>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-primary btn-lg btn-add">등록</button>
+				<button type="button" class="btn btn-secondary btn-lg btn-add">취소</button>
+			</div>
+		</div>
+
+
+
+
+
+		<!-- task create -->
+		<div class="my-controller read">
+			<div class="CONTROLLER controller-add">Information</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TITLE</h6>
+				<input class="my-controller-add-input" type="text" name="" value="한강 러닝 3km" disabled="" />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">DESCRIPTION</h6>
+				<textarea class="my-controller-read-textarea" disabled="">염창나들목~합수부 방향. 6'30'' 페이스.</textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="" disabled=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label>
+							</div>
+						</td>
+						<th class="time-td start-hour">9 시</th>
+						<th class="time-td start-minute">30 분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off" checked="" disabled=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<th class="time-td end-hour">10 시</th>
+						<th class="time-td end-minute">00 분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-warning btn-lg btn-read">수정</button>
+				<button type="button" class="btn btn-secondary btn-lg btn-read">닫기</button>
+			</div>
+		</div>
+
+
+
+		<!-- task update -->
+		<div class="my-controller update">
+			<div class="CONTROLLER controller-add">Modify</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TITLE</h6>
+				<input class="my-controller-add-input" type="text" name="" value="한강 러닝 3km" placeholder="과제의 이름을 지어주세요." />
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">DESCRIPTION</h6>
+				<textarea class="my-controller-add-textarea" placeholder="필요 시 상세 설명을 적어보세요.">염창나들목~합수부 방향. 6'30'' 페이스.</textarea>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TIME</h6>
+				<table>
+					<tbody class="time-from">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio1">am</label> <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio2">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>0</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th class="time-td">시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th class="time-td">분&nbsp;&nbsp;부터</th>
+					</tbody>
+					<tbody class="time-to">
+						<td>
+							<div class="btn-group ampm" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio2" id="btnradio3" autocomplete="off" checked=""> <label class="btn btn-outline-secondary btn-sm" for="btnradio3">am</label> <input type="radio" class="btn-check" name="btnradio2" id="btnradio4" autocomplete="off"> <label class="btn btn-outline-secondary btn-sm" for="btnradio4">pm</label>
+							</div>
+						</td>
+						<td><select class="form-select time-select" id="exampleSelect1">
+								<option>12</option>
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+								<option>11</option>
+						</select></td>
+						<th>시</th>
+						<td><select class="form-select time-select" id="exampleSelect2">
+								<option>0</option>
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+						</select></td>
+						<th>분&nbsp;&nbsp;까지</th>
+					</tbody>
+				</table>
+			</div>
+			<div class="sub-menu">
+				<h6 class="sub-menu-name">TAG</h6>
+				<div class="input-group mb-3" style="width: 304px;">
+					<input type="text" class="form-control my-controller-add-tag" placeholder="필요 시 새 태그를 생성하세요." aria-label="Recipient's username" aria-describedby="button-addon2">
+					<button class="btn btn-primary my-controller-add-tag" type="button" id="button-addon2">생성</button>
+				</div>
+				<div>
+					<span class="badge bg-info add-badge">과제</span>
+				</div>
+			</div>
+			<div class="sub-menu controller-btn">
+				<button type="button" class="btn btn-primary btn-lg btn-add">수정 완료</button>
+				<button type="button" class="btn btn-secondary btn-lg btn-add">취소</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>
